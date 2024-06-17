@@ -92,9 +92,9 @@ module ActionCable
         end
 
         def broadcast_messages
-          ::SolidCable::Message.broadcastable(channels, last_id).
-            each do |message|
-              broadcast(message.channel, message.payload)
+          ::SolidCable::Message.where(id: (last_id + 1)..).
+            find_each do |message|
+              broadcast(message.channel, message.payload) if channels.include?(message.channel)
               self.last_id = message.id
             end
         end
