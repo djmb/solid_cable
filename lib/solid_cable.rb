@@ -19,7 +19,7 @@ module SolidCable
     end
 
     def keep_messages_around_for
-      parse_duration(cable_config.keep_messages_around_for, default: 1.day)
+      parse_duration(cable_config.keep_messages_around_for, default: 1.minute)
     end
 
     private

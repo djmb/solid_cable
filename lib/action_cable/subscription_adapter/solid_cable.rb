@@ -12,6 +12,14 @@ module ActionCable
 
       def broadcast(channel, payload)
         ::SolidCable::Message.insert({ channel:, payload: })
+        if rand < 1/80.0
+          ids = ::SolidCable::Message.limit(100)
+            .order(:id)
+            .pluck(:id, :created_at)
+            .filter_map { |id, created_at| id if created_at < 1.minute.ago }
+
+          ::SolidCable::Message.delete(ids) if ids.any?
+        end
       end
 
       def subscribe(channel, callback, success_callback = nil)
